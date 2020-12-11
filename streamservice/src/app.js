@@ -7,23 +7,28 @@ import {
   Signin,
   Signup
 } from './pages/index'
-
+import { IsUserRedirect, ProtectedRoute } from './helpers/routes'
+import { useAuthListener} from './hooks'
 
 export default function App() {
+
+  const { user } = useAuthListener();
+
+
   return (
     <Router>
-      <Route exact path="/browse">
+      <ProtectedRoute user={user} path={ROUTES.BROWSE} exact>
         <Browse />
-      </Route>
-      <Route exact path="/signin">
+      </ProtectedRoute>
+      <IsUserRedirect user={user} loggedInPath={ROUTES.BROWSE} path={ROUTES.SIGNIN} exact>
         <Signin />
-      </Route>
-      <Route exact path="/signup">
+      </IsUserRedirect>
+      <IsUserRedirect user={user} loggedInPath={ROUTES.BROWSE} path={ROUTES.SIGNUP} exact>
         <Signup />
-      </Route>
-      <Route exact path={ROUTES.HOME}>
+      </IsUserRedirect>
+      <IsUserRedirect user={user} loggedInPath={ROUTES.BROWSE} path={ROUTES.HOME} exact>
         <Home />
-      </Route>
+      </IsUserRedirect>
     </Router>
   );
 }

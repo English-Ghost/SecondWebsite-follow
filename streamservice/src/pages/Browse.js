@@ -1,14 +1,14 @@
 import React from 'react'
-import { JumbotronContainer } from '../containers/jumbotron'
-import { FooterContainer } from '../containers/footer'
-import {FaqsContainer } from '../containers/faqs'
+import { useContent } from '../hooks';
 
 export default function Browse() {
+
+  const { series } = useContent('series');
+  const { films } = useContent('films');
+
   return (
     <>
-      <JumbotronContainer />
-      <FaqsContainer />
-      <FooterContainer />
+
     </>
   );
 }
