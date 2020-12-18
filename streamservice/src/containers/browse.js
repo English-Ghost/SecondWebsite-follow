@@ -1,12 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { SelectProfileContainer } from './profiles'
 import { FirebaseContext } from '../context/firebase'
-import { Loading, Header } from '../components'
+import { Loading, Header, Card } from '../components'
+import * as ROUTES from '../constants/routes'
+import logo from '../logo.svg'
+
 
 export function BrowseContainer({ slides }) {
 
+  const [category, setCategory] = useState('series');
+  const [searchTerm, setSearchTerm] = useState('');
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
+  const [slideRows, setSlideRows] = useState([]);
+
   const { firebase } = useContext(FirebaseContext);
   const user = firebase.auth().currentUser || {};
 
@@ -15,6 +22,10 @@ export function BrowseContainer({ slides }) {
       setLoading(false);
     }, 3000);
   }, [profile.displayName]);
+
+  useEffect(() => {
+    setSlideRows(slides[category]);
+  }, [slides, category]);
 
   return profile.displayName ? (
 
@@ -25,7 +36,33 @@ export function BrowseContainer({ slides }) {
       <Loading.ReleaseBody />
     )}
 
-    <Header>
+    <Header src="joker1" dontShowOnSmallViewPort>
+      <Header.Frame>
+        <Header.Group>
+          <Header.Logo to={ROUTES.BROWSE} src={logo} alt="Netflix" />
+          <Header.TextLink active={category === 'series' ? 'true' : 'false'} onClick={() => setCategory('series')}>
+              Series
+            </Header.TextLink>
+            <Header.TextLink active={category === 'films' ? 'true' : 'false'} onClick={() => setCategory('films')}>
+              Films
+            </Header.TextLink>
+        </Header.Group>
+        <Header.Group>
+          <Header.Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <Header.Profile>
+            <Header.Picture src={user.photoURL}/>
+            <Header.Dropdown>
+              <Header.Group>
+                <Header.Picture src={user.photoURL}/>
+                <Header.TextLink>{user.displayName}</Header.TextLink>
+              </Header.Group>
+              <Header.Group>
+                <Header.TextLink onClick={() => firebase.auth().signOut()}>Sign Out</Header.TextLink>
+              </Header.Group>
+            </Header.Dropdown>
+          </Header.Profile>
+        </Header.Group>
+      </Header.Frame>
       <Header.Feature>
         <Header.FeatureCallOut>
         Watch Joker Now
@@ -36,8 +73,12 @@ export function BrowseContainer({ slides }) {
         day job as a clown, and the guise he projects in a futile attempt to feel like he's
         part of the world around him
         </Header.Text>
+        <Header.PlayButton>Play</Header.PlayButton>
       </Header.Feature>
     </Header>
+
+    <Card.Group>
+    </Card.Group>
   </>
   ) : (
     <SelectProfileContainer user={user} setProfile={setProfile}/>
