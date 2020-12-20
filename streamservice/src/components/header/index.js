@@ -81,7 +81,7 @@ Header.FeatureCallOut = function HeaderFeatureCallOut({ children, ...restProps})
 
 Header.Picture = function HeaderPicture({ src, ...restProps}) {
   return (
-    <Picture {...restProps} src={'/images/user/${src}.png'} />
+    <Picture {...restProps} src={`/images/user/${src}.png`} />
   );
 }
 
